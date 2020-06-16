@@ -29,6 +29,7 @@ declare class AzureNotificationHub {
     static getUUID(autoGen: boolean): Promise<string>;
     static getInitialNotification<T>(): Promise<T>;
     static isNotificationEnabledOnOSLevel(): Promise<boolean>;
+    static retrieveFCMToken(): Promise<void>;
 }
 
 export = AzureNotificationHub;
