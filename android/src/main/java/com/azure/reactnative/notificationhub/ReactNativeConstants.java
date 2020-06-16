@@ -11,6 +11,8 @@ public final class ReactNativeConstants {
     public static final String EVENT_REMOTE_NOTIFICATION_RECEIVED = "remoteNotificationReceived";
     public static final String EVENT_AZURE_NOTIFICATION_HUB_REGISTERED = "azureNotificationHubRegistered";
     public static final String EVENT_AZURE_NOTIFICATION_HUB_REGISTERED_ERROR = "azureNotificationHubRegisteredError";
+    public static final String EVENT_FCM_TOKEN_RECEIVED = "fcmTokenReceived";
+    public static final String EVENT_FCM_TOKEN_ERROR = "fcmTokenError";
 
     // Registration's keys
     public static final String KEY_REGISTRATION_CONNECTIONSTRING = "connectionString";

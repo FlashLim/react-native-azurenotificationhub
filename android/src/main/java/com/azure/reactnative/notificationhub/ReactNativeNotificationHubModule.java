@@ -372,6 +372,43 @@ public class ReactNativeNotificationHubModule extends ReactContextBaseJavaModule
         promise.resolve(areNotificationsEnabled);
     }
 
+    @ReactMethod
+    public void retrieveFCMToken(Promise promise) {
+        ReactNativeNotificationHubUtil notificationHubUtil = ReactNativeNotificationHubUtil.getInstance();
+
+        ReactContext reactContext = getReactApplicationContext();
+
+        String uuid = notificationHubUtil.getUUID(reactContext);
+        if (uuid == null) {
+            uuid = ReactNativeUtil.genUUID();
+            notificationHubUtil.setUUID(reactContext, uuid);
+        }
+
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(reactContext);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                UiThreadUtil.runOnUiThread(
+                        new GoogleApiAvailabilityRunnable(
+                                getCurrentActivity(),
+                                apiAvailability,
+                                resultCode));
+                promise.reject(ERROR_PLAY_SERVICES, ERROR_PLAY_SERVICES_DISABLED);
+            } else {
+                promise.reject(ERROR_PLAY_SERVICES, ERROR_PLAY_SERVICES_UNSUPPORTED);
+            }
+            return;
+        }
+
+        Intent intent = ReactNativeNotificationHubUtil.IntentFactory.createIntent(
+                reactContext, ReactNativeFCMRegisterIntentService.class);
+        ReactNativeFCMRegisterIntentService.enqueueWork(reactContext, intent);
+
+        WritableMap res = Arguments.createMap();
+        res.putString(KEY_PROMISE_RESOLVE_UUID, uuid);
+        promise.resolve(res);
+    }
+
     @Override
     public void onHostResume() {
         setIsForeground(true);
