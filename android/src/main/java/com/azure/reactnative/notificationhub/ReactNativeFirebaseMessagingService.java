@@ -91,6 +91,10 @@ public class ReactNativeFirebaseMessagingService extends FirebaseMessagingServic
         }
 
         Bundle bundle = remoteMessage.toIntent().getExtras();
+        String color = bundle.getString(KEY_REMOTE_NOTIFICATION_COLOR);
+        if (color != null) {
+            bundle.putString(KEY_REMOTE_NOTIFICATION_COLOR, "#" + color);
+        }
         if (notificationHubUtil.getAppIsForeground()) {
             bundle.putBoolean(KEY_REMOTE_NOTIFICATION_FOREGROUND, true);
             bundle.putBoolean(KEY_REMOTE_NOTIFICATION_USER_INTERACTION, false);
